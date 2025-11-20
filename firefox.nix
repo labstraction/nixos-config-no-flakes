@@ -1,22 +1,22 @@
 { config, pkgs, ... }:
 
-  let
-    lock-false = {
-      Value = false;
-      Status = "locked";
-    };
-    lock-true = {
-      Value = true;
-      Status = "locked";
-    };
-  in
-{
-  programs = {
-    firefox = {
-      enable = true;
-      languagePacks = [ "de" "en-US" ];
+let
+  lock-false = {
+    Value = false;
+    Status = "locked";
+  };
+  lock-true = {
+    Value = true;
+    Status = "locked";
+  };
+in
+  {
+    programs = {
+      firefox = {
+        enable = true;
+        languagePacks = [ "de" "en-US" ];
 
-      /* ---- POLICIES ---- */
+        /* ---- POLICIES ---- */
       # Check about:policies#documentation for options.
       policies = {
         DisableTelemetry = true;
@@ -53,7 +53,7 @@
             install_url = "https://addons.mozilla.org/firefox/downloads/latest/privacy-badger17/latest.xpi";
             installation_mode = "force_installed";
           };
-          
+
           "treestyletab@piro.sakura.ne.jp" = {
             install_url = "https://addons.mozilla.org/firefox/downloads/file/4602712/tree_style_tab-4.2.7.xpi";
             installation_mode = "force_installed";
@@ -83,7 +83,7 @@
             installation_mode = "force_installed";
           };
         };
-  
+
         /* ---- PREFERENCES ---- */
         # Check about:config for options.
         Preferences = { 

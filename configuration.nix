@@ -1,32 +1,32 @@
 { config, pkgs, ... }:
 
 {
-	imports =
-		[
-			./hardware-configuration.nix
-			./firefox.nix
-			./git.nix
-			./vim.nix
-		];
+  imports =
+    [
+      ./hardware-configuration.nix
+      ./firefox.nix
+      ./git.nix
+      ./vim.nix
+    ];
 
-	# Bootloader.
-	boot.loader.systemd-boot.enable = true;
-	boot.loader.efi.canTouchEfiVariables = true;
+    # Bootloader.
+    boot.loader.systemd-boot.enable = true;
+    boot.loader.efi.canTouchEfiVariables = true;
 
-	virtualisation.containers.enable = true;
-	virtualisation = {
-		podman = {
-			enable = true;
-			# Create a `docker` alias for podman, to use it as a drop-in replacement
-			dockerCompat = true;
-			# Required for containers under podman-compose to be able to talk to each other.
-			defaultNetwork.settings.dns_enabled = true;
-		};
-	};
+    virtualisation.containers.enable = true;
+    virtualisation = {
+      podman = {
+        enable = true;
+            # Create a `docker` alias for podman, to use it as a drop-in replacement
+            dockerCompat = true;
+            # Required for containers under podman-compose to be able to talk to each other.
+            defaultNetwork.settings.dns_enabled = true;
+          };
+        };
 
 
 
-	networking.hostName = "nixos"; # Define your hostname.
+        networking.hostName = "nixos"; # Define your hostname.
 
 #-----------------------------------------------------------------------------------
 # Configure network proxy if necessary
@@ -34,74 +34,74 @@
 # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 #-----------------------------------------------------------------------------------
 
-	hardware.enableRedistributableFirmware = true;
+hardware.enableRedistributableFirmware = true;
 
 
-	networking.networkmanager.enable = true;
-	networking.networkmanager.wifi.powersave = false; #?
-	boot.kernelPackages = pkgs.linuxPackages_latest; #?
-	
-	# Set your time zone.
-	time.timeZone = "Europe/Rome";
+networking.networkmanager.enable = true;
+networking.networkmanager.wifi.powersave = false; #?
+boot.kernelPackages = pkgs.linuxPackages_latest; #?
 
-	# Select internationalisation properties.
-	i18n.defaultLocale = "en_US.UTF-8";
+    # Set your time zone.
+    time.timeZone = "Europe/Rome";
 
-	i18n.extraLocaleSettings = {
-		LC_ADDRESS = "it_IT.UTF-8";
-		LC_IDENTIFICATION = "it_IT.UTF-8";
-		LC_MEASUREMENT = "it_IT.UTF-8";
-		LC_MONETARY = "it_IT.UTF-8";
-		LC_NAME = "it_IT.UTF-8";
-		LC_NUMERIC = "it_IT.UTF-8";
-		LC_PAPER = "it_IT.UTF-8";
-		LC_TELEPHONE = "it_IT.UTF-8";
-		LC_TIME = "it_IT.UTF-8";
-	};
+    # Select internationalisation properties.
+    i18n.defaultLocale = "en_US.UTF-8";
 
-	#Enable the X11 windowing system.
-	services.xserver.enable = true;
+    i18n.extraLocaleSettings = {
+      LC_ADDRESS = "it_IT.UTF-8";
+      LC_IDENTIFICATION = "it_IT.UTF-8";
+      LC_MEASUREMENT = "it_IT.UTF-8";
+      LC_MONETARY = "it_IT.UTF-8";
+      LC_NAME = "it_IT.UTF-8";
+      LC_NUMERIC = "it_IT.UTF-8";
+      LC_PAPER = "it_IT.UTF-8";
+      LC_TELEPHONE = "it_IT.UTF-8";
+      LC_TIME = "it_IT.UTF-8";
+    };
 
-	#Enable the GNOME Desktop Environment.
-	services.xserver.displayManager.gdm.enable = true;
-	services.xserver.desktopManager.gnome.enable = true;
-	environment.gnome.excludePackages = with pkgs; [
-		gnome-tour
-		geary              
-		totem         
-		gnome-music
-		gnome-contacts
-		gnome-maps
-		gnome-weather
-		yelp          
-		gnome-calendar
-		gnome-clocks
-		decibels
-		gnome-console
-	];
+    #Enable the X11 windowing system.
+    services.xserver.enable = true;
+
+    #Enable the GNOME Desktop Environment.
+    services.xserver.displayManager.gdm.enable = true;
+    services.xserver.desktopManager.gnome.enable = true;
+    environment.gnome.excludePackages = with pkgs; [
+      gnome-tour
+      geary              
+      totem         
+      gnome-music
+      gnome-contacts
+      gnome-maps
+      gnome-weather
+      yelp          
+      gnome-calendar
+      gnome-clocks
+      decibels
+      gnome-console
+    ];
 
 
 
-	# Configure keymap in X11
-	services.xserver.xkb = {
-		layout = "it";
-		variant = "";
-	};
+    # Configure keymap in X11
+    services.xserver.xkb = {
+      layout = "it";
+      variant = "";
+    };
 
-	# Configure console keymap
-	console.keyMap = "it2";
+    # Configure console keymap
+    console.keyMap = "it2";
 
-	# Enable CUPS to print documents.
-	services.printing.enable = true;
+    # Enable CUPS to print documents.
+    services.printing.enable = true;
 
-	# Enable sound with pipewire.
-	services.pulseaudio.enable = false;
-	security.rtkit.enable = true;
-	services.pipewire = {
-		enable = true;
-		alsa.enable = true;
-		alsa.support32Bit = true;
-		pulse.enable = true;
+    # Enable sound with pipewire.
+    services.pulseaudio.enable = false;
+    security.rtkit.enable = true;
+    services.pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
 
 #----------------------------------------------------------
 # If you want to use JACK applications, uncomment this
@@ -113,7 +113,7 @@
 # no need to redefine it in your config for now)
 #media-session.enable = true;
 #------------------------------------------------------------------------------------------
-	};
+    };
 
 
 #------------------------------------------------------------------
@@ -121,62 +121,62 @@
 # services.xserver.libinput.enable = true;
 #------------------------------------------------------------------
 
-	# Define a user account. Don't forget to set a password with ‘passwd’.
-	users.users.labstraction = {
-		isNormalUser = true;
-		description = "labstraction";
-		extraGroups = [ "networkmanager" "wheel" ];
-		packages = with pkgs; [
-			#  thunderbird
-		];
-	};
+    # Define a user account. Don't forget to set a password with ‘passwd’.
+    users.users.labstraction = {
+      isNormalUser = true;
+      description = "labstraction";
+      extraGroups = [ "networkmanager" "wheel" ];
+      packages = with pkgs; [
+            #  thunderbird
+          ];
+        };
 
 
-	# Allow unfree packages
-	nixpkgs.config.allowUnfree = true;
+    # Allow unfree packages
+    nixpkgs.config.allowUnfree = true;
 
-	# List packages installed in system profile. To search, run:
-	# $ nix search wget
-	environment.systemPackages = with pkgs; [
-		wget
-		pciutils
-		usbutils
-		ethtool
-		dmidecode
-		protonvpn-gui
-		xclip
-		gnome-tweaks     
-		vlc
-		vscode
-		nixpkgs-fmt
-		nodejs
-		dive
-		podman-tui
-		docker-compose
-		yt-dlp
-		tmux
-		entr
-		ghostty
-	];
+    # List packages installed in system profile. To search, run:
+    # $ nix search wget
+    environment.systemPackages = with pkgs; [
+      wget
+      pciutils
+      usbutils
+      ethtool
+      dmidecode
+      protonvpn-gui
+      xclip
+      gnome-tweaks     
+      vlc
+      vscode
+      nixpkgs-fmt
+      nodejs
+      dive
+      podman-tui
+      docker-compose
+      yt-dlp
+      tmux
+      entr
+      ghostty
+    ];
 
-	programs.nautilus-open-any-terminal = {
- 		enable = true;
-		terminal = "ghostty";
-	};
+    programs.nautilus-open-any-terminal = {
+      enable = true;
+      terminal = "ghostty";
+    };
 
-	xdg.terminal-exec = {
-    		enable = true;
-    		settings.default = [ "ghostty.desktop" ];
-	};
+    xdg.terminal-exec = {
+      enable = true;
+      settings.default = [ "ghostty.desktop" ];
+    };
 
-  	environment.variables = {
-		TERMINAL = "ghostty";
-	};
+    environment.variables = {
+      TERMINAL = "ghostty";
+    };
 
-	environment.sessionVariables = {
-    		TERMINAL = "ghostty";
-    		TERM = "ghostty";  # o "ghostty" se supportato
-  	};
+    environment.sessionVariables = {
+      TERMINAL = "ghostty";
+      TERM = "ghostty";  # o "ghostty" se supportato
+    };
 
 
 #-------------------------------------------------------------------
@@ -199,7 +199,7 @@
 # Or disable the firewall altogether.
 # networking.firewall.enable = false;
 #---------------------------------------------------------------
-	system.stateVersion = "25.05"; # Did you read the comment?
+system.stateVersion = "25.05"; # Did you read the comment?
 
 }
 
