@@ -14,33 +14,21 @@
       };
 
       vimrcConfig.customRC = ''
-        set nocompatible "be iMproved, required
-        "set leader to space
         let mapleader=" "
-        "remap leader b to open buffer list and switch
+
         nnoremap <leader>b :buffers<CR>:buffer<Space>
-        "remap leader r to use registers
+
         nnoremap <leader>r :registers<CR>:normal<Space>"
         vnoremap <leader>r :registers<CR>:normal<Space>"
         "remap leader m to use marks
         nnoremap <leader>m :marks<CR>:normal<Space>'
         "remap tab to switch between visible windows
         nnoremap <tab> <C-w>W
-        "remap leader i to indent current line
-        nnoremap <leader>i ==
-        "remap leader i to indent selection
-        vnoremap <leader>i =
-        "remap leader e to open filetree
-        nnoremap <leader>e :Lexplore<cr><cr>
         "remap leader z to toggle fold
         nnoremap <leader>z za
         "remap leader c to toggle comment"
         nnoremap <Leader>c :call ToggleComment()<CR>
         vnoremap <Leader>c :call ToggleComment()<CR>
-        "remap leader v to edit vimrc
-        nnoremap <Leader>v :e $MYVIMRC<cr>
-        "remap leader vs to source vimrc
-        nnoremap <Leader>vs :source $MYVIMRC<cr>
         "remap a Ctrl-c to toggle between auto complete modes
         inoremap <C-@> <C-R>=ToggleAutoComplete()<CR>
         "remap leader t to toggle terminal
