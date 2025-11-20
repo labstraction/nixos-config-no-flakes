@@ -157,6 +157,7 @@ boot.kernelPackages = pkgs.linuxPackages_latest; #?
       tmux
       entr
       ghostty
+      live-server
     ];
 
     programs.nautilus-open-any-terminal = {
