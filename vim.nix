@@ -52,32 +52,12 @@
         inoremap <A-Up> <Esc>:m .-2<CR>==gi
         vnoremap <A-Down> :m '>+1<CR>gv=gv
         vnoremap <A-Up> :m '<-2<CR>gv=gv
-        "remap leader q to open/close quickfix
-        nnoremap <leader>q :call ToggleQuickFix()<CR>
-        "remap leader qn to go to next quickfix
-        nnoremap <leader>qn :cn<CR>
-        "remap leader qp to go to previous quickfix
-        nnoremap <leader>qp :cp<CR>
+        
         "remap leader qr to search and repalce quickfix files
         nnoremap <leader>qr :cfdo :%s///gc<Left><Left><Left><Left>
 
-
         "remap esc esc to exit terminal mode
         tnoremap <Esc><Esc> <C-\><C-n>
-
-
-        "remap leader s to toggle spellcheck
-        nnoremap <leader>s :setlocal spell!<cr>
-        "remap leader ss to suggest word under cursor
-        nnoremap <leader>ss z=
-        "remap leader sn to next misspelled word"
-        nnoremap <leader>sn ]s
-        "remap leader sp to previous misspelled word
-        nnoremap <leader>sp [s
-        "remap leader sa to add word to dictionary
-        nnoremap <leader>sa zg
-        "remap leader sr to remove word from dictionary
-        nnoremap <leader>sr zw
 
         "remap Q to use macro q
         nnoremap Q @q
@@ -107,16 +87,8 @@
         set showmode "show current mode
         set scrolloff=3 "keep 3 lines above and below cursor
         set nowrap "don't wrap lines
-        if has('nvim')
-        colorscheme habamax "set color scheme
         highlight Normal ctermbg=BLACK guibg=BLACK
-        else
-        if v:version >= 900
-            colorscheme retrobox
-        else
-            colorscheme slate
-        endif
-        endif
+        colorscheme retrobox
         set splitbelow "open new split below
         set splitright "open new split to the right
 
@@ -137,9 +109,8 @@
         "wildmenu-----------------------------
         set wildmenu "enable wildmenu
         set wildignorecase "ignore case when searching
-        if v:version >= 900
         set wildoptions=pum
-        endif
+
         "findfiles---------------------------
         set path+=** "search subdirectories
 
@@ -171,8 +142,6 @@
         set foldnestmax=10 "deepest fold is 10 levels
         set foldmethod=indent "fold based on indent level
 
-
-       
         "autocomplete---------------------------
         filetype plugin on "enable filetype plugins
         filetype indent on "enable filetype indentation
@@ -206,13 +175,16 @@
         inoremap [[ []<left>
         inoremap "" ""<left>
         inoremap ''' '''<left>
+        inoremap `` ``<left>
         "If you close a bracket that is already closed, it overwrites
         inoremap <expr> ) strpart(getline('.'), col('.')-1, 1) == ")" ? "\<Right>" : ")"
         inoremap <expr> } strpart(getline('.'), col('.')-1, 1) == "}" ? "\<Right>" : "}"
         inoremap <expr> ] strpart(getline('.'), col('.')-1, 1) == "]" ? "\<Right>" : "]"
         inoremap <expr> ' strpart(getline('.'), col('.')-1, 1) == "'" ? "\<Right>" : "'"
         inoremap <expr> " strpart(getline('.'), col('.')-1, 1) == "\"" ? "\<Right>" : "\""
+        inoremap <expr> ` strpart(getline('.'), col('.')-1, 1) == "`" ? "\<Right>" : "`"
         "enclose a selection in visual mode with "'({[
+        vnoremap ` <Esc>`<i`<Esc>`>a<right>`<Esc>
         vnoremap ' <Esc>`<i'<Esc>`>a<right>'<Esc>
         vnoremap " <Esc>`<i"<Esc>`>a<right>"<Esc>
         vnoremap ( <Esc>`<i(<Esc>`>a<right>)<Esc>
@@ -241,17 +213,6 @@
         set undodir=~/temp_vim/undo// "set undo dir to ~/temp/undo
         set dir=~/temp_vim/swp// "set swap dir to ./swp
 
-        "clean trailing spaces-------------------"
-        fun! CleanExtraSpaces()
-        let save_cursor = getpos(".")
-        let old_query = getreg('/')
-        silent! %s/\s\+$//e
-        call setpos('.', save_cursor)
-        call setreg('/', old_query)
-        endfun
-        "add command CleanSpaces to clean trailing spaces
-        command! CleanSpaces call CleanExtraSpaces()
-
         "install copilot----------------------
         function! InstallCopilot()
         let slash = has('unix') ? '/' : '\'
@@ -273,15 +234,6 @@
         endif
         endfunction
         command! InstallCopilot call InstallCopilot()
-
-        "toggle quickfix-----------------------------------
-        fun! ToggleQuickFix()
-        if empty(filter(getwininfo(), 'v:val.quickfix'))
-            copen
-        else
-            cclose
-        endif
-        endfun
 
         "grep project-------------------------------
         fun! GrepProject(askWord)
@@ -324,6 +276,7 @@
             echo "No comment leader found for filetype"
         endif
         endfun
+
       '';
 
     })
