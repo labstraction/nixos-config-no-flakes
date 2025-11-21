@@ -20,10 +20,11 @@
 
         nnoremap <leader>r :registers<CR>:normal<Space>"
         vnoremap <leader>r :registers<CR>:normal<Space>"
-        "remap leader m to use marks
+
         nnoremap <leader>m :marks<CR>:normal<Space>'
-        "remap tab to switch between visible windows
+
         nnoremap <tab> <C-w>W
+
         "remap leader z to toggle fold
         nnoremap <leader>z za
         "remap leader c to toggle comment"
@@ -31,8 +32,6 @@
         vnoremap <Leader>c :call ToggleComment()<CR>
         "remap a Ctrl-c to toggle between auto complete modes
         inoremap <C-@> <C-R>=ToggleAutoComplete()<CR>
-        "remap leader t to toggle terminal
-        nnoremap <leader>t <cmd>call ToggleTerm()<cr>
         "remap leader K to kill
         nnoremap <leader>k :wa<CR>:mks! ~/temp_vim/main-session.vim<CR>:qa<CR>
         "remap leader l to open last session
@@ -45,8 +44,7 @@
         nnoremap <leader>g :call GrepProject(v:true)<CR>
         "remap leader gg to grep project for word under cursor
         nnoremap <leader>gg :call GrepProject(v:false)<CR>
-        "remap leader a to select all
-        nnoremap <leader>a ggVG
+        
         "remap control up and down to move lines
         nnoremap <A-Down> :m .+1<CR>==
         nnoremap <A-Up> :m .-2<CR>==
@@ -62,8 +60,6 @@
         nnoremap <leader>qp :cp<CR>
         "remap leader qr to search and repalce quickfix files
         nnoremap <leader>qr :cfdo :%s///gc<Left><Left><Left><Left>
-        "remap ctrl-d to insert date
-        inoremap <C-d> <C-R>=strftime("%FT%T%z")<CR>
 
 
         "remap esc esc to exit terminal mode
@@ -86,17 +82,12 @@
         "remap Q to use macro q
         nnoremap Q @q
 
-        "syntax-------------------------------
         syntax enable "enable syntax highlighting
         autocmd! BufNewFile,BufRead *.frag set ft=c
         autocmd! BufNewFile,BufRead *.*js set syntax=typescript
         autocmd! BufNewFile,BufRead *.*json set ft=json
 
-        "statusline---------------------------
         set laststatus=2 "always show statusline
-        if has('nvim')
-        set laststatus=3  "only one statusline in neovim
-        endif        
         set showcmd "show command in bottom right
         set statusline=[%n][%f]%y%=%(%h%1*%m%*%r%w%q%)[%l(%p%%/%L),%v]
 
@@ -152,11 +143,9 @@
         "findfiles---------------------------
         set path+=** "search subdirectories
 
-        "linenumber---------------------------
         set number "set line numbers
         set relativenumber "set relative line numbers
 
-        "filetree-----------------------------
         let g:netrw_banner = 0 "disable banner
         let g:netrw_liststyle = 3 "tree style
         let g:netrw_browse_split = 4 "open in previous window
@@ -183,28 +172,7 @@
         set foldmethod=indent "fold based on indent level
 
 
-        "terminal"------------------------------"
-        fun! ToggleTerm()
-        let l:OpenTerm = {x -> x
-            \  ? { -> execute('botright 10 split +term') }
-            \  : { -> execute('botright term ++rows=10') }
-            \ }(has('nvim'))
-        let term = gettabvar(tabpagenr(), 'term',
-            \ {'main': -1, 'winnr': -1, 'bufnr': -1})
-        if ! bufexists(term.bufnr)
-        call l:OpenTerm()
-        call settabvar(tabpagenr(), 'term',
-              \ {'main': winnr('#'), 'winnr': winnr(), 'bufnr': bufnr()})
-        setl winheight=10
-        else
-        if ! len(filter(tabpagebuflist(), {_,x -> x == term.bufnr}))
-          exe 'botright 10 split +b\ ' . term.bufnr
-        else
-          exe term.winnr . ' wincmd c'
-        endif
-        endif
-        endfun
-
+       
         "autocomplete---------------------------
         filetype plugin on "enable filetype plugins
         filetype indent on "enable filetype indentation
@@ -338,6 +306,7 @@
         \   "bashrc": '#',
         \   "mail": '>',
         \   "vim": '"',
+        \   "nix": '#'
         \ }
 
         fun! ToggleComment()
