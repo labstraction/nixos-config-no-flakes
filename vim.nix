@@ -9,7 +9,10 @@
       name = "vim";
 
       vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
-        start = [ vim-nix ];
+        start = [ 
+          vim-nix
+          copilot-vim
+        ];
         opt = [];
       };
 

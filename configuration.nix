@@ -158,12 +158,16 @@ boot.kernelPackages = pkgs.linuxPackages_latest; #?
       entr
       ghostty
       live-server
-      htop
+      bottom 
       broot
-      cmus
       curl
       neofetch
       pandoc
+      glslviewer
+      dust
+      epr
+      visidata
+      posting
     ];
 
     programs.nautilus-open-any-terminal = {
