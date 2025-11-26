@@ -34,20 +34,19 @@
         nnoremap <Leader>c :call ToggleComment()<CR>
         vnoremap <Leader>c :call ToggleComment()<CR>
         "remap a Ctrl-c to toggle between auto complete modes
-        inoremap <C-@> <C-R>=ToggleAutoComplete()<CR>
+        "inoremap <C-Space> <C-R>=ToggleAutoComplete()<CR>
         "remap leader K to kill
         nnoremap <leader>k :wa<CR>:mks! ~/temp_vim/main-session.vim<CR>:qa<CR>
         "remap leader l to open last session
         nnoremap <leader>l :source ~/temp_vim/main-session.vim<CR>
-        "remap leader h to clear search highlight
-        nnoremap <leader>h :nohlsearch<CR>
+
         "remap leader f to replace
         nnoremap <leader>f :%s///gc<Left><Left><Left><left>
         "remap leader g to grep project
         nnoremap <leader>g :call GrepProject(v:true)<CR>
         "remap leader gg to grep project for word under cursor
         nnoremap <leader>gg :call GrepProject(v:false)<CR>
-        
+
         "remap control up and down to move lines
         nnoremap <A-Down> :m .+1<CR>==
         nnoremap <A-Up> :m .-2<CR>==
@@ -55,7 +54,8 @@
         inoremap <A-Up> <Esc>:m .-2<CR>==gi
         vnoremap <A-Down> :m '>+1<CR>gv=gv
         vnoremap <A-Up> :m '<-2<CR>gv=gv
-        
+
+
         "remap leader qr to search and repalce quickfix files
         nnoremap <leader>qr :cfdo :%s///gc<Left><Left><Left><Left>
 
@@ -216,28 +216,6 @@
         set undodir=~/temp_vim/undo// "set undo dir to ~/temp/undo
         set dir=~/temp_vim/swp// "set swap dir to ./swp
 
-        "install copilot----------------------
-        function! InstallCopilot()
-        let slash = has('unix') ? '/' : '\'
-        let path = strpart($MYVIMRC, 0, strridx($MYVIMRC, slash)+1)
-        let copilotPath = path.'pack'.slash.'github'.slash.'start'.slash.'copilot.vim'
-        echo 'is this the correct path: '.copilotPath.'?'
-        let choice = input('press Y to continue, E to edit the path, or any other key to cancel')
-        if choice == 'E'
-            let copilotPath = input('enter the new path')
-        endif
-        if choice == 'Y' || choice == 'E'
-            if empty(glob(copilotPath))
-                echo 'Installing copilot.vim...'
-                execute '!git clone https://github.com/github/copilot.vim.git '.copilotPath
-            else
-                echo 'Updating copilot.vim...'
-                execute '!cd '.copilotPath.' && git pull'
-            endif
-        endif
-        endfunction
-        command! InstallCopilot call InstallCopilot()
-
         "grep project-------------------------------
         fun! GrepProject(askWord)
         let search = expand('<cword>')
@@ -279,6 +257,55 @@
             echo "No comment leader found for filetype"
         endif
         endfun
+
+        let g:custom_complete_results = []
+
+        function! CustomComplete()
+        let l:current_input = matchstr(getline('.'), '\S\+$')
+        if empty(l:current_input)
+        return ""
+        endif
+
+        " Raccoglie i risultati da varie fonti
+        let allres = []
+
+        " Omni completion
+        try
+        let allres += getcompletion(l:current_input, 'omni')
+        catch
+        endtry
+
+        " Buffer completion
+        try
+        let allres += getcompletion(l:current_input, 'buffer')
+        catch
+        endtry
+
+        " File completion
+        try
+        let allres += getcompletion(l:current_input, 'file')
+        catch
+        endtry
+
+        " Line completion
+        try
+        let allres += getcompletion(l:current_input, 'line')
+        catch
+        endtry
+
+        " Rimuove duplicati e ordina
+        if !empty(allres)
+        call sort(allres)
+        call uniq(allres)
+        let &completeopt = 'menuone,noinsert,noselect'
+        call complete(col('.'), allres)
+        endif
+
+        return ""
+        endfunction
+
+        " Completamento manuale con Ctrl-Space
+        inoremap <C-Space> <C-r>=CustomComplete()<CR>  
 
       '';
 

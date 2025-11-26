@@ -25,8 +25,7 @@
         };
 
 
-
-        networking.hostName = "nixos"; # Define your hostname.
+    networking.hostName = "nixos"; # Define your hostname.
 
 #-----------------------------------------------------------------------------------
 # Configure network proxy if necessary
@@ -34,12 +33,12 @@
 # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 #-----------------------------------------------------------------------------------
 
-hardware.enableRedistributableFirmware = true;
+    hardware.enableRedistributableFirmware = true;
 
 
-networking.networkmanager.enable = true;
-networking.networkmanager.wifi.powersave = false; #?
-boot.kernelPackages = pkgs.linuxPackages_latest; #?
+    networking.networkmanager.enable = true;
+    networking.networkmanager.wifi.powersave = false; #?
+    boot.kernelPackages = pkgs.linuxPackages_latest; #?
 
     # Set your time zone.
     time.timeZone = "Europe/Rome";
@@ -59,27 +58,27 @@ boot.kernelPackages = pkgs.linuxPackages_latest; #?
       LC_TIME = "it_IT.UTF-8";
     };
 
-    #Enable the X11 windowing system.
-    services.xserver.enable = true;
 
-    #Enable the GNOME Desktop Environment.
-    services.xserver.displayManager.gdm.enable = true;
-    services.xserver.desktopManager.gnome.enable = true;
-    environment.gnome.excludePackages = with pkgs; [
-      gnome-tour
-      geary              
-      totem         
-      gnome-music
-      gnome-contacts
-      gnome-maps
-      gnome-weather
-      yelp          
-      gnome-calendar
-      gnome-clocks
-      decibels
-      gnome-console
+
+    services.xserver = {
+      enable = true;
+      desktopManager = {
+        xterm.enable = false;
+        xfce.enable = true;
+      };
+    };
+
+
+    services.displayManager.defaultSession = "xfce";
+
+    environment.xfce.excludePackages = with pkgs; [
+      xfce.parole
+      xfce.xfce4-terminal
     ];
 
+
+    services.touchegg.enable = true;
+    services.gnome.gnome-keyring.enable = true;
 
 
     # Configure keymap in X11
@@ -126,29 +125,21 @@ boot.kernelPackages = pkgs.linuxPackages_latest; #?
       isNormalUser = true;
       description = "labstraction";
       extraGroups = [ "networkmanager" "wheel" ];
-      packages = with pkgs; [
-            #  thunderbird
-          ];
-        };
+      packages = with pkgs; [];
+    };
 
 
     # Allow unfree packages
     nixpkgs.config.allowUnfree = true;
 
     # List packages installed in system profile. To search, run:
-    # $ nix search wget
     environment.systemPackages = with pkgs; [
       wget
-      pciutils
-      usbutils
-      ethtool
-      dmidecode
       protonvpn-gui
       xclip
-      gnome-tweaks     
+      gnome-tweaks
       vlc
       vscode
-      nixpkgs-fmt
       nodejs
       dive
       podman-tui
@@ -158,22 +149,24 @@ boot.kernelPackages = pkgs.linuxPackages_latest; #?
       entr
       ghostty
       live-server
-      bottom 
+      bottom
       broot
       curl
       neofetch
       pandoc
       glslviewer
-      dust
+      wiper
       epr
       visidata
       posting
+      cariddi
+      sttr
+      monolith
+      doxx
+      blueberry
+      inkscape
     ];
 
-    programs.nautilus-open-any-terminal = {
-      enable = true;
-      terminal = "ghostty";
-    };
 
     xdg.terminal-exec = {
       enable = true;
@@ -186,8 +179,12 @@ boot.kernelPackages = pkgs.linuxPackages_latest; #?
 
     environment.sessionVariables = {
       TERMINAL = "ghostty";
-      TERM = "ghostty";  # o "ghostty" se supportato
+      TERM = "ghostty";  
     };
+
+
+
+
 
 
 #-------------------------------------------------------------------
