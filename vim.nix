@@ -4,7 +4,7 @@
 
   environment.systemPackages = with pkgs; [
 
-    ((vim_configurable.override {  }).customize{
+    ((vim-full.override {  }).customize{
 
       name = "vim";
 
@@ -12,10 +12,11 @@
         start = [ 
           vim-nix
           copilot-vim
+          supertab
         ];
         opt = [];
       };
-
+      
       vimrcConfig.customRC = ''
         let mapleader=" "
 
@@ -258,9 +259,9 @@
         endif
         endfun
 
-        let g:custom_complete_results = []
-
-        function! CustomComplete()
+        set completefunc=CustomCompleteFunc
+        function! CustomCompleteFunc(findstart, base)
+        echo "CustomCompleteFunc called with findstart=" . a:findstart . " base=" . a:base
         let l:current_input = matchstr(getline('.'), '\S\+$')
         if empty(l:current_input)
         return ""
@@ -269,43 +270,58 @@
         " Raccoglie i risultati da varie fonti
         let allres = []
 
-        " Omni completion
         try
-        let allres += getcompletion(l:current_input, 'omni')
+        let allres += getcompletion(l:current_input, 'environment')
         catch
         endtry
 
-        " Buffer completion
+        echo "env results: " . string(allres)
+
         try
-        let allres += getcompletion(l:current_input, 'buffer')
+        let allres += getcompletion(l:current_input, 'function')
         catch
         endtry
+
+        echo "function results: " . string(allres)
 
         " File completion
         try
-        let allres += getcompletion(l:current_input, 'file')
+        let allres += getcompletion(l:current_input, 'var')
         catch
         endtry
 
+        echo "var results: " . string(allres)
+
         " Line completion
         try
-        let allres += getcompletion(l:current_input, 'line')
+        let allres += getcompletion(l:current_input, 'user')
         catch
         endtry
+
+        echo "user results: " . string(allres)
+
+        try
+        let allres += getcompletion(l:current_input, 'tag')
+        catch
+        endtry
+
+        echo "tag results: " . string(allres)
+
+
 
         " Rimuove duplicati e ordina
         if !empty(allres)
         call sort(allres)
         call uniq(allres)
-        let &completeopt = 'menuone,noinsert,noselect'
-        call complete(col('.'), allres)
-        endif
 
-        return ""
+        echo "Completion results: " . string(allres)
+
+        return allres
+        endif
         endfunction
 
-        " Completamento manuale con Ctrl-Space
-        inoremap <C-Space> <C-r>=CustomComplete()<CR>  
+        " Usa Ctrl-X Ctrl-U per il completamento
+        inoremap <silent><C-Space> <C-X><C-U>
 
       '';
 

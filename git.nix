@@ -74,7 +74,7 @@ tree = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%
 
 # Abilita l'agente SSH
 programs.ssh = {
-  startAgent = true;
+  #startAgent = true;
   extraConfig = ''
             Host github.com
             HostName github.com

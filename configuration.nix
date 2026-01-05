@@ -18,20 +18,45 @@
       podman = {
         enable = true;
             # Create a `docker` alias for podman, to use it as a drop-in replacement
-            dockerCompat = true;
+        dockerCompat = true;
             # Required for containers under podman-compose to be able to talk to each other.
-            defaultNetwork.settings.dns_enabled = true;
-          };
-        };
+        defaultNetwork.settings.dns_enabled = true;
+      };
+    };
 
 
-    networking.hostName = "nixos"; # Define your hostname.
+    networking.hostName = "ritalevix"; # Define your hostname.
 
 #-----------------------------------------------------------------------------------
 # Configure network proxy if necessary
 # networking.proxy.default = "http://user:password@proxy:port/";
 # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 #-----------------------------------------------------------------------------------
+    hardware.bluetooth = {
+      enable = true;
+      powerOnBoot = false;
+    };
+
+    services.tlp = {
+      enable = true;
+      settings = {
+        CPU_SCALING_GOVERNOR_ON_AC = "performance";
+        CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+        CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+        CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+
+        CPU_MIN_PERF_ON_AC = 0;
+        CPU_MAX_PERF_ON_AC = 100;
+        CPU_MIN_PERF_ON_BAT = 0;
+        CPU_MAX_PERF_ON_BAT = 20;
+
+       #Optional helps save long term battery health
+       START_CHARGE_THRESH_BAT0 = 40; # 40 and below it starts to charge
+       STOP_CHARGE_THRESH_BAT0 = 80; # 80 and above it stops charging
+
+      };
+    };
 
     hardware.enableRedistributableFirmware = true;
 
@@ -75,8 +100,8 @@
       xfce.parole
       xfce.xfce4-terminal
     ];
-
-
+      
+    
     services.touchegg.enable = true;
     services.gnome.gnome-keyring.enable = true;
 
@@ -94,6 +119,9 @@
     services.printing.enable = true;
 
     # Enable sound with pipewire.
+    boot.extraModprobeConfig = ''
+      options snd-hda-intel model=thinkpad
+    '';
     services.pulseaudio.enable = false;
     security.rtkit.enable = true;
     services.pipewire = {
@@ -128,7 +156,8 @@
       packages = with pkgs; [];
     };
 
-
+    programs.appimage.enable = true;
+    programs.appimage.binfmt = true;
     # Allow unfree packages
     nixpkgs.config.allowUnfree = true;
 
@@ -139,7 +168,7 @@
       xclip
       gnome-tweaks
       vlc
-      vscode
+      vscode.fhs
       nodejs
       dive
       podman-tui
@@ -165,6 +194,14 @@
       doxx
       blueberry
       inkscape
+      seahorse
+      peek
+      peazip
+      pavucontrol
+      wireplumber
+      qalculate-gtk
+      gleam
+      erlang_28
     ];
 
 
